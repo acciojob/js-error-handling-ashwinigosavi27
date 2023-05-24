@@ -1,54 +1,18 @@
 //your code here
-class OutOfRangeError extends Error {
-  constructor(arg) {
-    const message = `Expression should only consist of integers and +-/* characters and not ${arg}`;
-    super(message);
-    this.name = 'OutOfRangeError';
-  }
-}
+const express = require('express');
+const path = require('path');
 
-class InvalidExprError extends Error {
-  constructor() {
-    const message = 'Expression should not have an invalid combination of operators';
-    super(message);
-    this.name = 'InvalidExprError';
-  }
-}
+const app = express();
 
-function evaluateExpression(expression) {
-  const operators = ['+', '-', '*', '/'];
+app.use(express.static(__dirname))
 
-  if (!/^[0-9+\-*/ ]+$/.test(expression)) {
-    throw new OutOfRangeError('invalid characters');
-  }
-
-  if (/([+\-*/]){2,}/.test(expression)) {
-    throw new InvalidExprError();
-  }
-
-  if (/^[+\-*/]/.test(expression)) {
-    throw new SyntaxError('Expression should not start with an invalid operator');
-  }
-
-  if (/[+\-*/]$/.test(expression)) {
-    throw new SyntaxError('Expression should not end with an invalid operator');
-  }
-
-  // Perform the expression evaluation logic here
-  // ...
-}
-
-try {
-  const expression = '2+3++';
-  evaluateExpression(expression);
-} catch (error) {
-  if (error instanceof OutOfRangeError) {
-    console.error(`OutOfRangeError: ${error.message}`);
-  } else if (error instanceof InvalidExprError) {
-    console.error(`InvalidExprError: ${error.message}`);
-  } else if (error instanceof SyntaxError) {
-    console.error(`SyntaxError: ${error.message}`);
-  } else {
-    console.error('An error occurred:', error.message);
-  }
-}
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname + '/main.html'));
+});
+//your code here
+app.post('/add', (req, res) => {
+  const {a,b} = req.body;
+  res.status(200).send(a+b);
+  // res.sendFile(path.join(__dirname + '/main.html'));
+});
+module.exports = app;
